@@ -21,27 +21,49 @@ const App = () => {
     setTextAreaValue(event.target.value);
     setGenerated(event.target.value);
   };
+
   return (
     <Fragment>
-      <textarea
-        rows={20}
-        cols={50}
-        value={textAreaValue}
-        onChange={handleChange}
-      ></textarea>
-      <pre>
-        <code>
-          <SyntaxHighlighter language={selectedLanguage}>
-            {generated}
-          </SyntaxHighlighter>
-        </code>
-      </pre>
-      <select
-        value={selectedLanguage}
-        onChange={(e) => setSelectedLanguage(e.target.value)}
-      >
-        {languagesSupported.map(LanguageOption)}
-      </select>
+      <div className="my-4 border-solid border-gray-600">
+        <select
+          value={selectedLanguage}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
+        >
+          {languagesSupported.map(LanguageOption)}
+        </select>
+      </div>
+
+      <div className="flex bg-gray-200">
+        <div className="flex-1 text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
+          <pre>
+            <textarea
+              rows={20}
+              cols={60}
+              value={textAreaValue}
+              onChange={handleChange}
+            ></textarea>
+          </pre>
+        </div>
+        <div className="flex-1 text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
+          <pre>
+            <code>
+              <SyntaxHighlighter language={selectedLanguage}>
+                {generated}
+              </SyntaxHighlighter>
+            </code>
+          </pre>
+
+          <button
+            onClick={() => {
+              console.log(generated);
+              navigator.clipboard.writeText(generated);
+            }}
+            className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          >
+            Copy to Clipboard
+          </button>
+        </div>
+      </div>
     </Fragment>
   );
 };
