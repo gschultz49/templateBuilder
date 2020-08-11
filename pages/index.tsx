@@ -3,31 +3,20 @@ import styles from "../styles/Home.module.css";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useState, Fragment } from "react";
 import languagesSupported from "./languages";
-
+import testLanguages from "../testSnippets";
 
 const LanguageOption = (language) => {
-  return (
-    <option value={language}>{language}</option>
-  )
-}
+  return <option value={language}>{language}</option>;
+};
 
-const Component = () => {
-  const codeString = `
-  const Component = () => { 
-    return (
-      <pre>
-        <code>
-          <SyntaxHighlighter language="javascript">
-            {codeString}
-          </SyntaxHighlighter>
-        </code>
-      </pre>
-    );
-  };
-  `;
-  const [textAreaValue, setTextAreaValue] = useState("Input meee");
-  const [generated, setGenerated] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+const App = () => {
+  const { reactString } = testLanguages;
+  const [textAreaValue, setTextAreaValue] = useState(reactString);
+  const [generated, setGenerated] = useState(reactString);
+
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    languagesSupported.find((e) => e === "javascript")
+  );
   const handleChange = (event) => {
     setTextAreaValue(event.target.value);
     setGenerated(event.target.value);
@@ -35,8 +24,8 @@ const Component = () => {
   return (
     <Fragment>
       <textarea
-        rows={10}
-        cols={20}
+        rows={20}
+        cols={50}
         value={textAreaValue}
         onChange={handleChange}
       ></textarea>
@@ -48,7 +37,7 @@ const Component = () => {
         </code>
       </pre>
       <select
-        value={languagesSupported[0]}
+        value={selectedLanguage}
         onChange={(e) => setSelectedLanguage(e.target.value)}
       >
         {languagesSupported.map(LanguageOption)}
@@ -57,7 +46,7 @@ const Component = () => {
   );
 };
 
-export default Component;
+export default App;
 
 // export default function Home() {
 //   return (
