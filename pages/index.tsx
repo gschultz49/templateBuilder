@@ -1,6 +1,15 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import SyntaxHighlighter from "react-syntax-highlighter";
+import { useState, Fragment } from "react";
+import languagesSupported from "./languages";
+
+
+const LanguageOption = (language) => {
+  return (
+    <option value={language}>{language}</option>
+  )
+}
 
 const Component = () => {
   const codeString = `
@@ -16,14 +25,35 @@ const Component = () => {
     );
   };
   `;
+  const [textAreaValue, setTextAreaValue] = useState("Input meee");
+  const [generated, setGenerated] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const handleChange = (event) => {
+    setTextAreaValue(event.target.value);
+    setGenerated(event.target.value);
+  };
   return (
-    <pre>
-      <code>
-        <SyntaxHighlighter language="javascript">
-          {codeString}
-        </SyntaxHighlighter>
-      </code>
-    </pre>
+    <Fragment>
+      <textarea
+        rows={10}
+        cols={20}
+        value={textAreaValue}
+        onChange={handleChange}
+      ></textarea>
+      <pre>
+        <code>
+          <SyntaxHighlighter language={selectedLanguage}>
+            {generated}
+          </SyntaxHighlighter>
+        </code>
+      </pre>
+      <select
+        value={languagesSupported[0]}
+        onChange={(e) => setSelectedLanguage(e.target.value)}
+      >
+        {languagesSupported.map(LanguageOption)}
+      </select>
+    </Fragment>
   );
 };
 
@@ -68,7 +98,8 @@ export default Component;
 
 //           <a
 //             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-//             className={styles.card}
+//             className={styles.card}import languagesSupported from './languages';
+
 //           >
 //             <h3>Deploy &rarr;</h3>
 //             <p>
