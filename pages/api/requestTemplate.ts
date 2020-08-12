@@ -32,15 +32,18 @@ export const GenerateTemplateDirectory = ({
 export interface TemplateFile {
   name: string;
   content: string;
+  language: string;
 }
 
 export const GenerateTemplateFile = ({
   name,
   content,
+  language,
 }: TemplateFile): TemplateFile => {
   return {
     name,
     content,
+    language,
   };
 };
 
@@ -65,6 +68,5 @@ const request = async (state: any): Promise<TemplateResponse> => {
   });
   return response.json();
 };
-
 
 export default request;

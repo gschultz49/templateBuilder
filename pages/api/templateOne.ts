@@ -7,25 +7,27 @@ import {
 const TemplateOneConfig = (req, res) => {
   if (req.method === "POST") {
     // this is where the state would be translated into the json config object
-    console.log(`Request obj:${req}`);
+    console.log(req.body);
     const randomStateInput = "templateOne.sql";
     const testData: TemplateResponse = {
       isDirectory: false,
       data: [
         GenerateTemplateFile({
           name: randomStateInput,
-          content: `
-              const Component = () => { 
-                return (
-                  <pre>
-                    <code>
-                      <SyntaxHighlighter language="javascript">
-                        {jsCodeString}
-                      </SyntaxHighlhjkjhlighter>
-                    </code>
-                  </pre>
-                );
-              };`,
+          content: `let a = ${req.body.a}; 
+let b = ${req.body.b};
+const Component = () => { 
+return (
+    <pre>
+    <code>
+        <SyntaxHighlighter language="javascript">
+        {jsCodeString}
+        </SyntaxHighlhjkjhlighter>
+    </code>
+    </pre>
+);
+};`,
+          language: "javascript",
         }),
       ],
       metadata: GenerateTemplateMetadata({
@@ -41,4 +43,4 @@ const TemplateOneConfig = (req, res) => {
   }
 };
 
-export default TemplateOneConfig;  
+export default TemplateOneConfig;

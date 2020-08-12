@@ -1,6 +1,5 @@
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useState, Fragment } from "react";
-import languagesSupported from "./languages";
 import testLanguages from "../testSnippets";
 import TemplateOne from "./templateOne";
 import TemplateTwo from "./templateTwo";
@@ -23,17 +22,29 @@ const App = () => {
   const [textAreaValue, setTextAreaValue] = useState(reactString);
   const [generated, setGenerated] = useState(reactString);
   const [selectedLanguage, setSelectedLanguage] = useState(
-    languagesSupported.find((e) => e === "json")
+    SyntaxHighlighter.supportedLanguages.find((e) => e === "json")
   );
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [SelectedTemplate, setSelectedTemplate] = useState(
     availableTemplates["templateOne"]
   );
-  const [templateResponse, setTemplateResponse] = useState({});
+  const [templateResponse, setTemplateResponse] = useState(null);
 
   const handleInputBoxChange = (event) => {
     setTextAreaValue(event.target.value);
     setGenerated(event.target.value);
+  };
+
+  const formatTemplateResponse = (templateResponse) => {
+    let templateObj = JSON.parse(templateResponse);
+    if (templateObj === null) {
+      return "Nothing yet...";
+    } else {
+      return (
+        //@ts-ignore
+        templateObj.data[0].content
+      );
+    }
   };
 
   return (
@@ -48,37 +59,29 @@ const App = () => {
         {Object.keys(availableTemplates).map(OptionFactory)}
       </select>
 
-      <SelectedTemplate
-        templateResponse={templateResponse}
-        setTemplateResponse={setTemplateResponse}
-      />
-
       <div className="my-4 border-solid border-gray-600">
         <select
           value={selectedLanguage}
           onChange={(e) => setSelectedLanguage(e.target.value)}
         >
-          {languagesSupported.map(OptionFactory)}
+          {SyntaxHighlighter.supportedLanguages.map(OptionFactory)}
         </select>
       </div>
 
       <div className="flex bg-gray-200">
-        <div className="flex-1 text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
-          <pre>
-            <textarea
-              rows={20}
-              cols={60}
-              value={textAreaValue}
-              onChange={handleInputBoxChange}
-            ></textarea>
-          </pre>
+        <div className="w-full text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
+          <SelectedTemplate
+            templateResponse={templateResponse}
+            setTemplateResponse={setTemplateResponse}
+          />
         </div>
-        <div className="flex-1 text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
+        <div className="w-full text-gray-700 text-left bg-gray-400 px-4 py-2 m-2">
           <pre>
             <code>
               <SyntaxHighlighter language={selectedLanguage}>
                 {/* {generated} */}
-                {JSON.stringify(templateResponse, undefined, 4)}
+                {/* {JSON.stringify(templateResponse)} */}
+                {formatTemplateResponse(templateResponse)}
               </SyntaxHighlighter>
             </code>
           </pre>
@@ -141,7 +144,8 @@ export default App;
 
 //           <a
 //             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-//             className={styles.card}import languagesSupported from './languages';
+//             className={styles.card}import SyntaxHighlighter.supportedLanguages from './languages';
+import { TemplateResponse } from "./api/requestTemplate";
 
 //           >
 //             <h3>Deploy &rarr;</h3>
