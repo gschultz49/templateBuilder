@@ -1,35 +1,64 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useState, Fragment } from "react";
 import languagesSupported from "./languages";
 import testLanguages from "../testSnippets";
+import TemplateOne from "./templateOne";
+import TemplateTwo from "./templateTwo";
 
-const LanguageOption = (language) => {
-  return <option value={language}>{language}</option>;
+const OptionFactory = (optionValue) => {
+  return (
+    <option key={optionValue} value={optionValue}>
+      {optionValue}
+    </option>
+  );
+};
+
+const availableTemplates = {
+  templateOne: () => (props) => <TemplateOne {...props} />,
+  templateTwo: () => (props) => <TemplateTwo {...props} />,
 };
 
 const App = () => {
   const { reactString } = testLanguages;
   const [textAreaValue, setTextAreaValue] = useState(reactString);
   const [generated, setGenerated] = useState(reactString);
-
   const [selectedLanguage, setSelectedLanguage] = useState(
-    languagesSupported.find((e) => e === "javascript")
+    languagesSupported.find((e) => e === "json")
   );
-  const handleChange = (event) => {
+  const [selectedTemplateName, setSelectedTemplateName] = useState("");
+  const [SelectedTemplate, setSelectedTemplate] = useState(
+    availableTemplates["templateOne"]
+  );
+  const [templateResponse, setTemplateResponse] = useState({});
+
+  const handleInputBoxChange = (event) => {
     setTextAreaValue(event.target.value);
     setGenerated(event.target.value);
   };
 
   return (
     <Fragment>
+      <select
+        value={selectedTemplateName}
+        onChange={(e) => {
+          setSelectedTemplateName(e.target.value); // update select button
+          setSelectedTemplate(availableTemplates[e.target.value]); // update the template we are looking at
+        }}
+      >
+        {Object.keys(availableTemplates).map(OptionFactory)}
+      </select>
+
+      <SelectedTemplate
+        templateResponse={templateResponse}
+        setTemplateResponse={setTemplateResponse}
+      />
+
       <div className="my-4 border-solid border-gray-600">
         <select
           value={selectedLanguage}
           onChange={(e) => setSelectedLanguage(e.target.value)}
         >
-          {languagesSupported.map(LanguageOption)}
+          {languagesSupported.map(OptionFactory)}
         </select>
       </div>
 
@@ -40,7 +69,7 @@ const App = () => {
               rows={20}
               cols={60}
               value={textAreaValue}
-              onChange={handleChange}
+              onChange={handleInputBoxChange}
             ></textarea>
           </pre>
         </div>
@@ -48,7 +77,8 @@ const App = () => {
           <pre>
             <code>
               <SyntaxHighlighter language={selectedLanguage}>
-                {generated}
+                {/* {generated} */}
+                {JSON.stringify(templateResponse, undefined, 4)}
               </SyntaxHighlighter>
             </code>
           </pre>
@@ -56,7 +86,9 @@ const App = () => {
           <button
             onClick={() => {
               console.log(generated);
-              navigator.clipboard.writeText(generated);
+              navigator.clipboard.writeText(
+                JSON.stringify(templateResponse, undefined, 4)
+              );
             }}
             className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
           >
