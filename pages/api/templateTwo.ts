@@ -4,7 +4,15 @@ import {
   GenerateTemplateMetadata,
 } from "./requestTemplate";
 
-const TemplateTwoConfig = (req, res) => {
+const produceTestDataFromList = (req) => {
+  const str = req.body.rows.map((row, index) => {
+    return `let c = ${row.c}; 
+          let d = ${row.d};\n`;
+  });
+  return str;
+};
+
+const TemplateOneConfig = (req, res) => {
   if (req.method === "POST") {
     // this is where the state would be translated into the json config object
     console.log(req.body);
@@ -14,19 +22,19 @@ const TemplateTwoConfig = (req, res) => {
       data: [
         GenerateTemplateFile({
           name: randomStateInput,
-          content: `let c = ${req.body.c};
-let d = ${req.body.d};
-const Component = () => { 
-    return (
-    <pre>
-        <code>
-        <SyntaxHighlighter language="javascript">
-            {jsCodeString}
-        </SyntaxHighlhjkjhlighter>
-        </code>
-    </pre>
-    );
-};`,
+          content: `
+  ${produceTestDataFromList(req)}
+  const Component = () => { 
+  return (
+      <pre>
+      <code>
+          <SyntaxHighlighter language="javascript">
+          {jsCodeString}
+          </SyntaxHighlhjkjhlighter>
+      </code>
+      </pre>
+  );
+  };`,
           language: "javascript",
         }),
       ],
@@ -43,4 +51,4 @@ const Component = () => {
   }
 };
 
-export default TemplateTwoConfig;
+export default TemplateOneConfig;

@@ -4,6 +4,14 @@ import {
   GenerateTemplateMetadata,
 } from "./requestTemplate";
 
+const produceTestDataFromList = (req) => {
+  const str = req.body.rows.map((row, index) => {
+    return `let a = ${row.a}; 
+        let b = ${row.b};\n`;
+  });
+  return str;
+};
+
 const TemplateOneConfig = (req, res) => {
   if (req.method === "POST") {
     // this is where the state would be translated into the json config object
@@ -14,8 +22,8 @@ const TemplateOneConfig = (req, res) => {
       data: [
         GenerateTemplateFile({
           name: randomStateInput,
-          content: `let a = ${req.body.a}; 
-let b = ${req.body.b};
+          content: `
+${produceTestDataFromList(req)}
 const Component = () => { 
 return (
     <pre>
