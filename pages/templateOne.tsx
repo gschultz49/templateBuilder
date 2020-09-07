@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import request, { getApiEndpoint } from "./api/requestTemplate";
-import Tree, { FileTree, FileNode } from "./components/tree/Tree";
+import Tree, { FileNode } from "../tree/Tree";
 
 const row = (props) => {
   return { ...props };
