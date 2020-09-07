@@ -1,5 +1,6 @@
-import { Fragment, useState, useReducer } from "react";
+import { Fragment, useState } from "react";
 import request, { getApiEndpoint } from "./api/requestTemplate";
+import Tree, { FileNode } from "../tree/Tree";
 
 const row = (props) => {
   return { ...props };
@@ -57,6 +58,26 @@ const TemplateOneRow = ({ rows, setRows, index }) => {
   );
 };
 
+const structure: FileNode[] = [
+  {
+    type: "folder",
+    name: "src",
+    childrens: [
+      {
+        type: "folder",
+        name: "Components",
+        childrens: [
+          { type: "file", name: "Modal.js" },
+          { type: "file", name: "Modal.css" },
+        ],
+      },
+      { type: "file", name: "index.js" },
+      { type: "file", name: "index.html" },
+    ],
+  },
+  { type: "file", name: "package.json" },
+];
+
 const TemplateOne = ({ templateResponse, setTemplateResponse }) => {
   const [rows, setRows] = useState(initialState);
   const [config, setConfig] = useState({
@@ -64,9 +85,13 @@ const TemplateOne = ({ templateResponse, setTemplateResponse }) => {
   });
   return (
     <Fragment>
-      {rows.map((_, index) => (
-        <TemplateOneRow rows={rows} setRows={setRows} index={index} />
-      ))}
+      <Tree data={structure} />
+
+      <div className="grid grid-cols-2 gap-4">
+        {rows.map((_, index) => (
+          <TemplateOneRow rows={rows} setRows={setRows} index={index} />
+        ))}
+      </div>
 
       <button
         onClick={(e) => {

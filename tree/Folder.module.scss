@@ -1,0 +1,28 @@
+%overflow {
+  overflow: hidden;
+}
+
+.collapsible0 {
+  @extend %overflow;
+  height: 0;
+}
+
+.collapsibleAuto {
+  @extend %overflow;
+  height: auto;
+}
+
+.folder {
+  padding-left: 20px;
+  svg {
+    display: inline-block;
+  }
+  .folder--label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    span {
+      margin-left: 5px;
+    }
+  }
+}

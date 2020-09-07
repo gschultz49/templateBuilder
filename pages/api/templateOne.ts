@@ -22,8 +22,8 @@ const TemplateOneConfig = (req, res) => {
       data: [
         GenerateTemplateFile({
           name: randomStateInput,
-          content: `
-${produceTestDataFromList(req)}
+          content: 
+`${produceTestDataFromList(req)}
 const Component = () => { 
 return (
     <pre>
